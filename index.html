@@ -3,10 +3,30 @@
   <head>
     <title></title>
     <style type="text/css">
-      /*body {
-        background:url(nwOtx.jpg);
+      body, html {
+        height: 100%;
       }
-*/
+      body {
+        background:url(nwOtx.jpg);
+        text-align: center;
+        
+      }
+      .container{
+        height: 15%;
+        width: 100%;
+        font-family: Audiowide;
+        font-size: 100px;
+        color: white;
+      }
+      .svg {
+        margin:0 auto;
+        background-color: white;
+      }
+      
+      /*#scoreBoard {
+        height:15%;
+        width:window.innerWidth/2;
+      }*/
 /*      .container {
         width:50%;
         height:50%;
@@ -25,22 +45,38 @@
     </style>
   </head>
   <body>
+    <link href='http://fonts.googleapis.com/css?family=Audiowide' rel='stylesheet' type='text/css'>
     <script src="http://d3js.org/d3.v2.js?2.10.1"></script>
     <script src="underscore.js"></script>
+    <div class="container">Collider</div>
     <script>
       var width = window.innerWidth;
       var height = window.innerHeight;
+      console.log(window.innerHeight);
       var score = 0;
       var highScore = 0;
 
       var svg = d3.select("body").append("svg")
+        .attr("class", "svg")
         .attr("width", width/2)
         .attr("height", height/2);
+
+
+      var gameBoard = d3.select("svg").append("rect")
+        .data([0])
+        .attr('height', 100)
+        .attr('x', 40)
+        .attr('y',100).enter()
+
+     var text = d3.select("svg").selectAll("rect").append("text")
+        .text("hi").style("fill","white");
+
+
       var circle = svg.selectAll("circle")
         .data(_.range(30))
         .enter().append('circle')
         .attr("class","enemy")
-        .style("fill", "blue")
+        .style("fill", "white")
         .attr("cx", function(d){
           return Math.random()*width/2;
         })
@@ -63,7 +99,7 @@
         .attr("cx", width/4)
         .attr("cy", height/4)
         .attr("r", 8);
-      
+
       function move() {
         svg.selectAll(".enemy")
           .transition().duration(1500)
@@ -86,7 +122,7 @@
             score = 0;
           }
           score+=.05;
-          if( (score - Math.round(score)) < 0.05 ) console.log(Math.round(score));
+          //if( (score - Math.round(score)) < 0.05 ) //console.log(Math.round(score));
         });
       };
       setInterval(function() {
