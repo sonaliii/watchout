@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <style type="text/css">
+      /*body {
+        background:url(nwOtx.jpg);
+      }
+*/
+/*      .container {
+        width:50%;
+        height:50%;
+        padding:10% ;
+        position:relative;
+        color:white;
+        margin: 0 auto;
+      }
+      
+      .scoreboard {
+        width: ;
+        height: ;
+        padding: ;
+      }
+*/
+    </style>
+  </head>
+  <body>
+    <script src="http://d3js.org/d3.v2.js?2.10.1"></script>
+    <script src="underscore.js"></script>
+    <script>
+      var width = window.innerWidth;
+      var height = window.innerHeight;
+      var score = 0;
+      var highScore = 0;
+
+      var svg = d3.select("body").append("svg")
+        .attr("width", width/2)
+        .attr("height", height/2);
+      var circle = svg.selectAll("circle")
+        .data(_.range(30))
+        .enter().append('circle')
+        .attr("class","enemy")
+        .style("fill", "blue")
+        .attr("cx", function(d){
+          return Math.random()*width/2;
+        })
+        .attr("cy", function(d){
+          return Math.random()*height/2;
+        })
+        .attr("r", 8);
+
+      var drag = d3.behavior.drag()
+        .on("drag", function() {
+          d3.select(this).attr("cx",Math.min(width/2 - 8,Math.max(8,d3.event.x)))
+          d3.select(this).attr("cy",Math.min(height/2 - 8,Math.max(8,d3.event.y)))
+        });
+
+      var player = svg.selectAll("circle")
+        .data(_.range(31))
+        .enter().append("circle")
+        .attr("class", "player")
+        .style("fill", "red")
+        .attr("cx", width/4)
+        .attr("cy", height/4)
+        .attr("r", 8);
+      
+      function move() {
+        svg.selectAll(".enemy")
+          .transition().duration(1500)
+          .attr("cx", function(d){
+            return Math.random()*width/2;
+          })
+          .attr("cy", function(d){
+            return Math.random()*height/2;
+          })
+      }
+
+      function checkCollision() {
+        var enemies = svg.selectAll(".enemy")[0];
+        var player = svg.selectAll(".player")[0][0];
+        _.each(enemies, function(obj) {
+          var diffX = player.cx.animVal.value - obj.cx.animVal.value;
+          var diffY = player.cy.animVal.value - obj.cy.animVal.value;
+          if (8 > (Math.sqrt(Math.pow(diffX,2)+Math.pow(diffY,2)))){
+            if(highScore < score) highScore = score;
+            score = 0;
+          }
+          score+=.05;
+          if( (score - Math.round(score)) < 0.05 ) console.log(Math.round(score));
+        });
+      };
+      setInterval(function() {
+        move();
+      }, 1500);
+      
+      setInterval(function() {
+        checkCollision();
+      }, 10);
+      d3.select(".player").call(drag);
+    </script>
+  </body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>
